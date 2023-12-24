@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd ">
+   <flow name="api-main">
+        <http:listener config-ref="api-httpListenerConfig" path="/api/*">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body>#[payload]</http:body>
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit:router config-ref="api-config" />
+		<error-handler ref="apikit-globalerrorError_Handler" />
+            </flow>
+    <flow name="api-console">
+        <http:listener config-ref="api-httpListenerConfig" path="/console/*">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body>#[payload]</http:body>
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit:console config-ref="api-config" />
+		<error-handler ref="apikit-globalerrorError_Handler" />
+    </flow>
+    <flow name="post:\customerState:application\json:api-config">
+
+		<flow-ref doc:name="Flow Reference to call initialise requestdata" doc:id="df1463c9-6df8-41a3-9f46-eb89437b3527" name="initialise-request-data-subflow" />
+		<logger level="INFO" doc:name="Initiating the Request for Customer State" doc:id="344463d8-8248-444d-b4e9-f3525ed7da14" message="#[%dw 2.0&#10;output application/json indent = false &#10;--- &#10;{ 	&#10;    TimeStamp: now(),&#10;    transactionId: vars.headers.'x-cms-transactionId',&#10;    AppName: app.name, 	&#10;    FlowName: flow.name, 	&#10;    BusinessProcessName:  &quot;Customer State&quot;, 	&#10;    Category:  &quot;Customer&quot;, 	&#10;    OriginatingApplication:  &quot;Expereince API&quot;, 	&#10;    DesinationApplication:  &quot;System API&quot;, 	&#10;    CustomerId: &quot;NA&quot;, 	&#10;    txnState: &quot;Start&quot; &#10;}]" />
+		<flow-ref doc:name="Flow Reference to call Customer State Implementation" doc:id="b8932bf4-04f3-4177-a15d-824206eb92c4" name="post-customer-state-implementation-Flow"/>
+		<logger level="INFO" doc:name="Response - Customer State finished" doc:id="4972a9b4-a34c-449e-af2d-52896c666c3c" message="#[%dw 2.0&#10;output application/json indent = false &#10;--- &#10;{ 	&#10;    TimeStamp: now(),&#10;    transactionId: vars.headers.'x-cms-transactionId',&#10;    AppName: app.name, 	&#10;    FlowName: flow.name, 	&#10;    BusinessProcessName:  &quot;Customer State&quot;, 	&#10;    Category:  &quot;Customer&quot;, 	&#10;    OriginatingApplication:  &quot;Expereince API&quot;, 	&#10;    DesinationApplication:  &quot;System API&quot;,	&#10;    CustomerId: &quot;NA&quot;, 	&#10;    txnState: &quot;END&quot; &#10;}]"/>
+		
+        <!-- <ee:transform>
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+-&#45;&#45;
+{
+  customerStateResponse: {
+    eventInstanceId: "fdgdgdgdfgdgdfgdfgdfgd",
+    status: "Success"
+  }
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform> -->
+		<error-handler ref="app-globalerrorError_Handler" />
+    </flow>
+    <flow name="post:\customers\resgistration:application\json:api-config">
+        <ee:transform>
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  registrationResponse: {
+    eventInstanceId: "fdgdgdgdfgdgdfgdfgdfgd",
+    status: "Success"
+  }
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+		<error-handler ref="app-globalerrorError_Handler" />
+    </flow>
+</mule>

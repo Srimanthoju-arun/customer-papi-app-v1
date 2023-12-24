@@ -1,0 +1,198 @@
+#%RAML 1.0
+title: customer-papi-raml
+description: This API used by fronted system to interect with customer related API.
+version: 1.0
+
+
+securitySchemes:
+  basic:
+    type: Basic Authentication
+
+securedBy:
+  - basic
+
+uses:
+  fragment-resources: /exchange_modules/dccf8cb9-272a-410f-98bc-0e3bb3a0020f/cmn-fragment/1.0.3/cmn-fragment.raml
+
+/customers:
+  /resgistration:
+    post:
+      description: this API will create new customer.
+      is:
+        - fragment-resources.common-header
+      queryParameters:
+        featureName:
+          type: string
+          required: true
+          enum:
+            - cf
+            - cwf
+          example: cf
+      body:
+        application/json:
+          type: fragment-resources.post-registration-request
+          example: !include /examples/post-resgistration-request-example.json
+   
+      responses:
+        201:
+          body:
+            application/json:
+              type: fragment-resources.post-registration-response
+              example: !include /examples/post-registration-response-example.json
+        400:
+          body:
+            application/json:
+              type: fragment-resources.error-dataType
+              example:
+                {
+                  "msg": "failed operation",
+                  "code": 400,
+                  "success": true,
+                  "eventId": "dbfhjsdb-hfb-do8ryt-876t7-5ty",
+                  "error": {
+                    "type": "BAD_REQUEST",
+                    "title": "Invalid Request",
+                    "details": "The input contains invalid data" }}
+        401:
+          body:
+            application/json:
+              type: fragment-resources.error-dataType 
+              example:
+                {
+                  "msg": "failed operation",
+                  "code": 401,
+                  "success" : true,
+                  "eventId": "dbfhjsdbhfbdo8ryt876t75ty",
+                  "error": {
+                    "type": "Un_Authorized",
+                    "title": "UnAuthorized",
+                    "details": "The Request is not Authorized" }}
+        404:
+          body:
+            application/json:
+              type: fragment-resources.error-dataType
+              example:
+                {
+                "msg": "failed operation",
+                "code": 404,
+                "success" : true,
+                "eventId": "dbfhjsdbhfbdo8ryt876t75ty",
+                "error": {
+                  "type": "NOT_FOUND",
+                  "title": "Resource not found",
+                  "details": "The URI requested is invalid or the resource requested does not exists"}}
+        500:
+          body:
+            application/json:
+              type: fragment-resources.error-dataType
+              example:
+                {
+                "msg": "failed operation",
+                "code": 500,
+                "success" : true,
+                "eventId": "dbfhjsdbhfbdo8ryt876t75ty",
+                "error": {
+                  "type": "SERVER_ERROR",
+                  "title": "Internal server error",
+                  "details": "The server encountered an unexpected condition which prevented it from fulfilling the request"
+                }
+              }
+
+/customerState:
+  post:
+    description: this API will create new customer.
+    is:
+      - fragment-resources.common-header
+    queryParameters:
+      featureName:
+        type: string
+        required: true
+        enum:
+          - cf
+          - cwf
+        example: cf
+    body:
+      application/json:
+        type: fragment-resources.post-customerState-request
+        example: !include /examples/post-customerState-request-example.json
+  
+    responses:
+      201:
+        body:
+          application/json:
+            type: fragment-resources.post-customerState-response
+            example: !include /examples/post-customerState-response-example.json
+      400:
+        body:
+          application/json:
+            type: fragment-resources.error-dataType
+            example:
+              {
+                "msg": "failed operation",
+                "code": 400,
+                "success": true,
+                "eventId": "dbfhjsdb-hfb-do8ryt-876t7-5ty",
+                "error": {
+                  "type": "BAD_REQUEST",
+                  "title": "Invalid Request",
+                  "details": "The input contains invalid data" }}
+      401:
+        body:
+          application/json:
+            type: fragment-resources.error-dataType 
+            example:
+              {
+                "msg": "failed operation",
+                "code": 401,
+                "success" : true,
+                "eventId": "dbfhjsdbhfbdo8ryt876t75ty",
+                "error": {
+                  "type": "Un_Authorized",
+                  "title": "UnAuthorized",
+                  "details": "The Request is not Authorized" }}
+      404:
+        body:
+          application/json:
+            type: fragment-resources.error-dataType
+            example:
+              {
+              "msg": "failed operation",
+              "code": 404,
+              "success" : true,
+              "eventId": "dbfhjsdbhfbdo8ryt876t75ty",
+              "error": {
+                "type": "NOT_FOUND",
+                "title": "Resource not found",
+                "details": "The URI requested is invalid or the resource requested does not exists"}}
+      500:
+        body:
+          application/json:
+            type: fragment-resources.error-dataType
+            example:
+              {
+              "msg": "failed operation",
+              "code": 500,
+              "success" : true,
+              "eventId": "dbfhjsdbhfbdo8ryt876t75ty",
+              "error": {
+                "type": "SERVER_ERROR",
+                "title": "Internal server error",
+                "details": "The server encountered an unexpected condition which prevented it from fulfilling the request"
+              }
+            }   
+                        
+
+                                
+                
+                
+
+
+
+            
+          
+            
+            
+            
+
+              
+

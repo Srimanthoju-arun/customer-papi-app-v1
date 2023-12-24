@@ -1,0 +1,15 @@
+{
+  "registrationRequest": {
+    "contactTpe": "mobile",
+    "countrycode": "+91",
+    "mobile": "985656596",
+    "email": "kumar@gmail.com",
+    "password": "sdadsad",
+    "acceptDataPolicy": true,
+    "recieveNews": true,
+    "acceptPIC": true,
+    "locale": "en",
+    "capthaToken": "sfsdfdgfdgdfgdfgdgfd",
+    "recieveClaimSettle": true
+  }
+}

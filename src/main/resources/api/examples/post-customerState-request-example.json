@@ -1,0 +1,10 @@
+{
+  "customerStateRequest": {
+    "contactTpe": "mobile",
+    "countrycode": "+91",
+    "mobile": "985656596",
+    "email": "kumar@gmail.com",
+    "password": "sdadsad",
+    "status": false
+  }
+}

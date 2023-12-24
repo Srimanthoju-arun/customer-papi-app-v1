@@ -1,0 +1,21 @@
+error:
+  bad_request:
+    code: "400"
+    errorType: "BAD_REQUEST"
+    title: "Invalid Request"
+    details: "The input contains invalid data"
+  resource_not_found:  
+    code: "404"
+    errorType: "NOT_FOUND"
+    title: "Resource not found"
+    details: "The URI requested is invalid or the resource requested does not exists"
+  un_authorized: 
+    code: "401"
+    errorType: "Un_Authorized"
+    title: "UnAuthorized"
+    details: "The Request is not Authorized"  
+  server_error:
+    code: "500"
+    errorType: "SERVER_ERROR"
+    title: "Internal server error"
+    details: "The server encountered an unexpected condition which prevented it from fulfilling the request"

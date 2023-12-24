@@ -1,0 +1,18 @@
+#%RAML 1.0 DataType
+type: object
+properties:
+  customerStateResponse:
+    type: object
+    required: true
+    properties:
+      eventInstanceId:
+        type: string
+        required: true
+        example: "fdgdgdgdfgdgdfgdfgdfgd"
+      status:
+        type: string
+        required: true
+        enum:
+          - Success
+          - Failure
+        example: "Success"

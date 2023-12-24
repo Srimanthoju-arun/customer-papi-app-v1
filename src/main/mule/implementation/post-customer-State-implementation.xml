@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	
+	<http:request-config name="HTTP_Request_configuration_Customer_SAPI" doc:name="HTTP Request configuration" doc:id="a8b90964-166e-4fcf-9a0c-68fd330f6ba1" >
+		<http:request-connection host="${http.requester.customer.sapi.host}" port="${http.requester.customer.sapi.port}" connectionIdleTimeout="300000"/>
+	</http:request-config>
+	<flow name="post-customer-state-implementation-Flow" doc:id="128d0ec1-bc52-4c6b-bc92-5692c1caee60" >
+		<logger level="INFO" doc:name="SFDC Request Inititated " doc:id="6a3fff4e-b15b-454d-8f9b-cf35c747796e" message="#[%dw 2.0&#10;output application/json indent = false &#10;--- &#10;{ 	&#10;    TimeStamp: vars.requestTime_var,&#10;    transactionId: vars.headers.'x-cms-transactionId',&#10;    AppName: app.name, 	&#10;    FlowName: flow.name, 	&#10;    BusinessProcessName:  &quot;Customer State&quot;, 	&#10;    Category:  &quot;Customer&quot;, 	&#10;    OriginatingApplication:  &quot;Experience API&quot;, 	&#10;    DesinationApplication:  &quot;System API&quot;, 	&#10;    CustomerId: &quot;NA&quot;, 	&#10;    txnState: &quot;SFDC REQUEST&quot; &#10;}]"/>
+		<http:request method="POST" doc:name="Request" doc:id="00bd0a28-7f2a-4f59-9ec9-8c82f9471656" config-ref="HTTP_Request_configuration_Customer_SAPI" path="${http.requester.customer.sapi.pathCustomerState}">
+			<http:body ><![CDATA[#[vars.requestPayload]]]></http:body>
+			<http:headers ><![CDATA[#[output application/java
+---
+{
+	"x-cms-transactionId" : vars.headers.'x-cms-transactionId',
+	"clientId" : vars.headers.clientId,
+	"clientSecret" : vars.headers.clientSecret,
+}]]]></http:headers>
+		</http:request>
+		<logger level="INFO" doc:name="SFDC Response received " doc:id="a531ba6c-0370-46d6-84e7-65dde0c35393" message="#[%dw 2.0&#10;output application/json indent = false &#10;--- &#10;{ 	&#10;    TimeStamp: now(),&#10;    transactionId: vars.headers.'x-cms-transactionId',&#10;    AppName: app.name, 	&#10;    FlowName: flow.name, 	&#10;    BusinessProcessName:  &quot;Customer Registration&quot;, 	&#10;    Category:  &quot;Customer&quot;, 	&#10;    OriginatingApplication:  &quot;Experience API&quot;, 	&#10;    DesinationApplication:  &quot;System API&quot;, 	 	&#10;    CustomerId: &quot;NA&quot;, 	&#10;    txnState: &quot;SFDC RESPONSE&quot; &#10;}]"/>
+		<ee:transform doc:name="SFDC Response payload for Customer Registration">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  "customerStateResponse": {
+    "eventInstanceId": vars.headers.'x-cms-transactionId',
+    "status": "Success"
+  }
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+	
+	</flow>
+</mule>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway"
+	xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd 
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd">
+	 <http:listener-config name="api-httpListenerConfig">
+        <http:listener-connection host="${http.listener.host}" port="${http.listener.port}" />
+    </http:listener-config>
+    <apikit:config name="api-config" api="api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" parser="RAML">
+	</apikit:config>
+    <configuration-properties doc:name="Configuration properties" doc:id="232de0bb-f3f8-4f15-9952-a78eb9de45f9" file="properties/${env}.yaml" />
+	<configuration-properties doc:name="Configuration properties" doc:id="bcb0a2b9-0c2f-44f9-9ea4-549075ceb39d" file="properties\constraints\errordetails.yaml" />
+	<api-gateway:autodiscovery apiId="${instanceID}" ignoreBasePath="true" doc:name="API Autodiscovery" doc:id="e4a7c74b-e8cb-401c-86df-4f516d08fc14" flowRef="api-main" />	
+    
+	
+</mule>

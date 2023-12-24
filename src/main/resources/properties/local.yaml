@@ -1,0 +1,17 @@
+instanceID: "19192739"
+
+http:
+  listener:
+    host: "0.0.0.0"
+    port: "8082"
+  requester:
+    customer:
+      sapi:
+        host: "0.0.0.0"
+        port: "8081"
+        pathCustomerState: "api/customerState?featureName=cf"
+    
+sfdc:
+  username: "kumar@vsoft.sandbox"
+  password: "Srimanthoju@4793"
+  securityToken : "9VTMX6YcdqxiO4Y5RBruad2q"
